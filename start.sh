@@ -13,13 +13,15 @@ export FLASK_ENV=development
 export DATABASE_URL=sqlite:///app.db
 export JWT_SECRET_KEY=codespace_secret_key_123
 
-# Inicializar o banco de dados
+# Inicializar o banco de dados e criar as tabelas
+flask db init
+flask db migrate -m "initial migration"
 flask db upgrade
 
 # Criar usuário admin (se não existir)
 python << END
 from backend.app import create_app, db
-from backend.app.models.usuario import Usuario
+from backend.app.models.usuario import Usuario, TipoUsuario
 
 app = create_app()
 with app.app_context():
@@ -28,7 +30,8 @@ with app.app_context():
             nome='Administrador',
             email='admin@exemplo.com',
             senha='senha123',
-            admin=True
+            tipo=TipoUsuario.ADMIN,
+            ativo=True
         )
         db.session.add(admin)
         db.session.commit()
@@ -41,8 +44,9 @@ END
 cd frontend
 npm install
 
-# Iniciar os servidores em terminais separados
-echo "Iniciando os servidores..."
-tmux new-session -d -s tabletech 'cd frontend && npm start'
-tmux split-window -h 'source ../venv/bin/activate && flask run'
-tmux -2 attach-session -d 
+# Iniciar os servidores
+echo "Para iniciar o backend, execute em um novo terminal:"
+echo "source venv/bin/activate && flask run"
+echo ""
+echo "Para iniciar o frontend, execute em outro terminal:"
+echo "cd frontend && npm start" 
