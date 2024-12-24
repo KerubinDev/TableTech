@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableTech - Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Barra de navegação -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo e título -->
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-900">TableTech</h1>
+                    </div>
+                </div>
+
+                <!-- Menu de navegação -->
+                <div class="flex items-center">
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="/templates/dashboard.html" class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            <i class="fas fa-home mr-1"></i>
+                            Dashboard
+                        </a>
+                        <a href="/templates/mesas.html" class="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            <i class="fas fa-table mr-1"></i>
+                            Mesas
+                        </a>
+                        <a href="/templates/clientes.html" class="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            <i class="fas fa-users mr-1"></i>
+                            Clientes
+                        </a>
+                        <a href="/templates/reservas.html" class="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            <i class="fas fa-calendar-alt mr-1"></i>
+                            Reservas
+                        </a>
+                    </div>
+
+                    <!-- Menu do usuário -->
+                    <div class="ml-6 relative">
+                        <div class="relative">
+                            <button id="userMenuButton" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <span class="sr-only">Abrir menu do usuário</span>
+                                <i class="fas fa-user-circle text-2xl text-gray-700"></i>
+                            </button>
+                        </div>
+
+                        <!-- Dropdown menu -->
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <a href="/templates/perfil.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i>
+                                Perfil
+                            </a>
+                            <a href="/templates/configuracoes.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-cog mr-2"></i>
+                                Configurações
+                            </a>
+                            <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                Sair
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Cabeçalho -->
+        <div class="md:flex md:items-center md:justify-between mb-6">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Dashboard
+                </h2>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4">
+                <button id="atualizarDadosBtn" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i class="fas fa-sync-alt mr-2"></i>
+                    Atualizar Dados
+                </button>
+            </div>
+        </div>
+
+        <!-- Cards de resumo -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Total de mesas -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-table text-2xl text-blue-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Total de Mesas
+                                </dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900" id="totalMesas">
+                                        0
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mesas ocupadas -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-chair text-2xl text-red-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Mesas Ocupadas
+                                </dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900" id="mesasOcupadas">
+                                        0
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reservas hoje -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-calendar-day text-2xl text-green-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Reservas Hoje
+                                </dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900" id="reservasHoje">
+                                        0
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total de clientes -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-users text-2xl text-purple-600"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Total de Clientes
+                                </dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900" id="totalClientes">
+                                        0
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de próximas reservas -->
+        <div class="mt-8">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Próximas Reservas
+            </h3>
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <ul id="listaProximasReservas" class="divide-y divide-gray-200">
+                    <!-- As próximas reservas serão renderizadas aqui -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Seção de mesas -->
+        <div class="mt-8">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Status das Mesas
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="gridMesas">
+                <!-- As mesas serão renderizadas aqui -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="/static/js/api.js"></script>
+    <script type="module" src="/static/js/estado.js"></script>
+    <script type="module">
+        import api from '/static/js/api.js';
+        import estadoApp from '/static/js/estado.js';
+
+        // Verifica autenticação
+        async function verificarAuth() {
+            if (!await estadoApp.verificarToken()) {
+                window.location.href = '/templates/login.html';
+            }
+        }
+
+        // Toggle menu do usuário
+        document.getElementById('userMenuButton').addEventListener('click', () => {
+            document.getElementById('userMenu').classList.toggle('hidden');
+        });
+
+        // Logout
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            api.logout();
+        });
+
+        // Atualiza os dados do dashboard
+        async function atualizarDashboard() {
+            try {
+                // Mostra indicador de carregamento
+                estadoApp.carregando = true;
+
+                // Obtém os dados do resumo
+                const resumo = await api.obterResumoDashboard();
+                
+                // Atualiza os cards
+                document.getElementById('totalMesas').textContent = resumo.total_mesas;
+                document.getElementById('mesasOcupadas').textContent = resumo.mesas_ocupadas;
+                document.getElementById('reservasHoje').textContent = resumo.reservas_hoje;
+                document.getElementById('totalClientes').textContent = resumo.total_clientes;
+
+                // Atualiza a lista de próximas reservas
+                const listaReservas = document.getElementById('listaProximasReservas');
+                listaReservas.innerHTML = resumo.proximas_reservas.map(reserva => `
+                    <li class="px-4 py-4 sm:px-6">
+                        <div class="flex items-center">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-medium text-gray-900 truncate">
+                                    ${reserva.cliente.nome}
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    <i class="fas fa-table mr-1"></i>
+                                    Mesa ${reserva.mesa.numero}
+                                    <span class="mx-2">•</span>
+                                    <i class="fas fa-users mr-1"></i>
+                                    ${reserva.numero_pessoas} pessoas
+                                    <span class="mx-2">•</span>
+                                    <i class="fas fa-clock mr-1"></i>
+                                    ${new Date(reserva.data + 'T' + reserva.hora).toLocaleString()}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                    ${reserva.status === 'pendente' ? 'bg-yellow-100 text-yellow-800' :
+                                    reserva.status === 'confirmada' ? 'bg-green-100 text-green-800' :
+                                    'bg-gray-100 text-gray-800'}">
+                                    ${reserva.status.charAt(0).toUpperCase() + reserva.status.slice(1)}
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                `).join('') || '<li class="px-4 py-4 sm:px-6 text-gray-500">Nenhuma reserva próxima</li>';
+
+                // Atualiza o grid de mesas
+                const gridMesas = document.getElementById('gridMesas');
+                gridMesas.innerHTML = resumo.mesas.map(mesa => `
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-lg font-medium text-gray-900">Mesa ${mesa.numero}</h4>
+                                    <p class="text-sm text-gray-500">
+                                        <i class="fas fa-users mr-1"></i>
+                                        ${mesa.capacidade} lugares
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                        ${mesa.status === 'livre' ? 'bg-green-100 text-green-800' :
+                                        mesa.status === 'ocupada' ? 'bg-red-100 text-red-800' :
+                                        mesa.status === 'reservada' ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-gray-100 text-gray-800'}">
+                                        ${mesa.status.charAt(0).toUpperCase() + mesa.status.slice(1)}
+                                    </span>
+                                </div>
+                            </div>
+                            ${mesa.reserva_atual ? `
+                                <div class="mt-2 text-sm text-gray-500">
+                                    <p>
+                                        <i class="fas fa-user mr-1"></i>
+                                        ${mesa.reserva_atual.cliente.nome}
+                                    </p>
+                                    <p>
+                                        <i class="fas fa-clock mr-1"></i>
+                                        ${new Date(mesa.reserva_atual.data + 'T' + mesa.reserva_atual.hora).toLocaleString()}
+                                    </p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (erro) {
+                console.error('Erro ao atualizar dashboard:', erro);
+                estadoApp.definirErro(erro.message);
+            } finally {
+                estadoApp.carregando = false;
+            }
+        }
+
+        // Botão de atualizar
+        document.getElementById('atualizarDadosBtn').addEventListener('click', () => {
+            if (!estadoApp.carregando) {
+                atualizarDashboard();
+            }
+        });
+
+        // Atualização automática a cada 5 minutos
+        let intervaloAtualizacao;
+
+        function iniciarAtualizacaoAutomatica() {
+            atualizarDashboard();
+            intervaloAtualizacao = setInterval(() => {
+                if (!estadoApp.carregando) {
+                    atualizarDashboard();
+                }
+            }, 5 * 60 * 1000);
+        }
+
+        function pararAtualizacaoAutomatica() {
+            if (intervaloAtualizacao) {
+                clearInterval(intervaloAtualizacao);
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Verifica autenticação
+                const autenticado = await estadoApp.verificarToken();
+                if (!autenticado) {
+                    window.location.href = '/templates/login.html';
+                    return;
+                }
+
+                // Adiciona observador para mostrar/ocultar loading
+                estadoApp.adicionarObservador((estado) => {
+                    const loadingOverlay = document.getElementById('loadingOverlay');
+                    if (estado.carregando) {
+                        if (!loadingOverlay) {
+                            const overlay = document.createElement('div');
+                            overlay.id = 'loadingOverlay';
+                            overlay.className = 'loading-overlay';
+                            overlay.innerHTML = '<div class="loading-spinner"></div>';
+                            document.body.appendChild(overlay);
+                        }
+                    } else if (loadingOverlay) {
+                        loadingOverlay.remove();
+                    }
+                });
+
+                // Adiciona observador para mostrar mensagens de erro
+                estadoApp.adicionarObservador((estado) => {
+                    const errorContainer = document.getElementById('errorContainer');
+                    if (estado.erro) {
+                        if (!errorContainer) {
+                            const container = document.createElement('div');
+                            container.id = 'errorContainer';
+                            container.className = 'error-message fixed top-4 right-4 z-50';
+                            container.innerHTML = `
+                                <div class="flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-2"></i>
+                                    <span>${estado.erro}</span>
+                                </div>
+                            `;
+                            document.body.appendChild(container);
+                        } else {
+                            errorContainer.querySelector('span').textContent = estado.erro;
+                        }
+                    } else if (errorContainer) {
+                        errorContainer.remove();
+                    }
+                });
+
+                // Inicia a atualização automática
+                iniciarAtualizacaoAutomatica();
+
+            } catch (erro) {
+                console.error('Erro na inicialização:', erro);
+                estadoApp.definirErro(erro.message);
+            }
+        });
+
+        // Limpa o intervalo quando a página é fechada ou ocultada
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                pararAtualizacaoAutomatica();
+            } else {
+                iniciarAtualizacaoAutomatica();
+            }
+        });
+    </script>
+</body>
+</html> 

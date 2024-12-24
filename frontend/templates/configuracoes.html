@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">Configurações do Sistema</h1>
+
+        <!-- Configurações Gerais -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Configurações Gerais</h2>
+            
+            <form id="configGeralForm" class="space-y-6">
+                <div>
+                    <label for="nomeRestaurante" class="block text-sm font-medium text-gray-700">
+                        Nome do Restaurante
+                    </label>
+                    <input type="text" id="nomeRestaurante" name="nomeRestaurante" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="horarioAbertura" class="block text-sm font-medium text-gray-700">
+                        Horário de Abertura
+                    </label>
+                    <input type="time" id="horarioAbertura" name="horarioAbertura" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="horarioFechamento" class="block text-sm font-medium text-gray-700">
+                        Horário de Fechamento
+                    </label>
+                    <input type="time" id="horarioFechamento" name="horarioFechamento" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="intervaloReserva" class="block text-sm font-medium text-gray-700">
+                        Intervalo entre Reservas (minutos)
+                    </label>
+                    <input type="number" id="intervaloReserva" name="intervaloReserva" min="15" max="120" step="15" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Salvar Configurações Gerais
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Configurações de Email -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Configurações de Email</h2>
+            
+            <form id="configEmailForm" class="space-y-6">
+                <div>
+                    <label for="emailRemetente" class="block text-sm font-medium text-gray-700">
+                        Email do Remetente
+                    </label>
+                    <input type="email" id="emailRemetente" name="emailRemetente" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="nomeRemetente" class="block text-sm font-medium text-gray-700">
+                        Nome do Remetente
+                    </label>
+                    <input type="text" id="nomeRemetente" name="nomeRemetente" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="servidorSMTP" class="block text-sm font-medium text-gray-700">
+                        Servidor SMTP
+                    </label>
+                    <input type="text" id="servidorSMTP" name="servidorSMTP" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="portaSMTP" class="block text-sm font-medium text-gray-700">
+                        Porta SMTP
+                    </label>
+                    <input type="number" id="portaSMTP" name="portaSMTP" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="usuarioSMTP" class="block text-sm font-medium text-gray-700">
+                        Usuário SMTP
+                    </label>
+                    <input type="text" id="usuarioSMTP" name="usuarioSMTP" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="senhaSMTP" class="block text-sm font-medium text-gray-700">
+                        Senha SMTP
+                    </label>
+                    <input type="password" id="senhaSMTP" name="senhaSMTP" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div class="flex justify-between">
+                    <button type="button" id="btnTestarEmail"
+                        class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        Testar Configurações
+                    </button>
+                    
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Salvar Configurações de Email
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Backup e Restauração -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Backup e Restauração</h2>
+            
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Backup Manual</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Faça o download de um backup completo do sistema.
+                    </p>
+                    <button type="button" id="btnBackup"
+                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        Gerar Backup
+                    </button>
+                </div>
+
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Restaurar Backup</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Restaure o sistema a partir de um arquivo de backup.
+                    </p>
+                    <div class="flex items-center space-x-4">
+                        <input type="file" id="arquivoBackup" accept=".zip,.sql"
+                            class="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100">
+                        <button type="button" id="btnRestaurar"
+                            class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                            Restaurar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Carrega as configurações iniciais
+    carregarConfiguracoes();
+
+    // Configura os formulários
+    configurarFormularios();
+
+    // Configura os botões de backup
+    configurarBackup();
+});
+
+async function carregarConfiguracoes() {
+    try {
+        estadoApp.iniciarCarregamento();
+        
+        // Carrega configurações gerais
+        const configGeral = await gerenciadorConfiguracoes.carregarConfiguracoesGerais();
+        preencherFormularioGeral(configGeral);
+
+        // Carrega configurações de email
+        const configEmail = await gerenciadorConfiguracoes.carregarConfiguracoesEmail();
+        preencherFormularioEmail(configEmail);
+
+    } catch (erro) {
+        console.error('Erro ao carregar configurações:', erro);
+        estadoApp.adicionarMensagem('erro', 'Erro ao carregar configurações');
+    } finally {
+        estadoApp.finalizarCarregamento();
+    }
+}
+
+function preencherFormularioGeral(config) {
+    const form = document.getElementById('configGeralForm');
+    if (!form || !config) return;
+
+    form.nomeRestaurante.value = config.nome_restaurante || '';
+    form.horarioAbertura.value = config.horario_abertura || '';
+    form.horarioFechamento.value = config.horario_fechamento || '';
+    form.intervaloReserva.value = config.intervalo_reserva || 30;
+}
+
+function preencherFormularioEmail(config) {
+    const form = document.getElementById('configEmailForm');
+    if (!form || !config) return;
+
+    form.emailRemetente.value = config.email_remetente || '';
+    form.nomeRemetente.value = config.nome_remetente || '';
+    form.servidorSMTP.value = config.servidor_smtp || '';
+    form.portaSMTP.value = config.porta_smtp || '';
+    form.usuarioSMTP.value = config.usuario_smtp || '';
+    // Não preenchemos a senha por segurança
+}
+
+function configurarFormularios() {
+    // Configura formulário geral
+    const formGeral = document.getElementById('configGeralForm');
+    if (formGeral) {
+        formGeral.addEventListener('submit', async (evento) => {
+            evento.preventDefault();
+            
+            try {
+                estadoApp.iniciarCarregamento();
+                
+                await gerenciadorConfiguracoes.salvarConfiguracoesGerais({
+                    nome_restaurante: formGeral.nomeRestaurante.value,
+                    horario_abertura: formGeral.horarioAbertura.value,
+                    horario_fechamento: formGeral.horarioFechamento.value,
+                    intervalo_reserva: parseInt(formGeral.intervaloReserva.value)
+                });
+
+                estadoApp.adicionarMensagem('sucesso', 'Configurações gerais salvas com sucesso');
+            } catch (erro) {
+                console.error('Erro ao salvar configurações gerais:', erro);
+                estadoApp.adicionarMensagem('erro', erro.message);
+            } finally {
+                estadoApp.finalizarCarregamento();
+            }
+        });
+    }
+
+    // Configura formulário de email
+    const formEmail = document.getElementById('configEmailForm');
+    if (formEmail) {
+        formEmail.addEventListener('submit', async (evento) => {
+            evento.preventDefault();
+            
+            try {
+                estadoApp.iniciarCarregamento();
+                
+                await gerenciadorConfiguracoes.salvarConfiguracoesEmail({
+                    email_remetente: formEmail.emailRemetente.value,
+                    nome_remetente: formEmail.nomeRemetente.value,
+                    servidor_smtp: formEmail.servidorSMTP.value,
+                    porta_smtp: parseInt(formEmail.portaSMTP.value),
+                    usuario_smtp: formEmail.usuarioSMTP.value,
+                    senha_smtp: formEmail.senhaSMTP.value
+                });
+
+                estadoApp.adicionarMensagem('sucesso', 'Configurações de email salvas com sucesso');
+            } catch (erro) {
+                console.error('Erro ao salvar configurações de email:', erro);
+                estadoApp.adicionarMensagem('erro', erro.message);
+            } finally {
+                estadoApp.finalizarCarregamento();
+            }
+        });
+
+        // Configura botão de teste de email
+        const btnTestarEmail = document.getElementById('btnTestarEmail');
+        if (btnTestarEmail) {
+            btnTestarEmail.addEventListener('click', async () => {
+                try {
+                    estadoApp.iniciarCarregamento();
+                    await gerenciadorConfiguracoes.testarEmail();
+                    estadoApp.adicionarMensagem('sucesso', 'Email de teste enviado com sucesso');
+                } catch (erro) {
+                    console.error('Erro ao testar email:', erro);
+                    estadoApp.adicionarMensagem('erro', erro.message);
+                } finally {
+                    estadoApp.finalizarCarregamento();
+                }
+            });
+        }
+    }
+}
+
+function configurarBackup() {
+    // Configura botão de backup
+    const btnBackup = document.getElementById('btnBackup');
+    if (btnBackup) {
+        btnBackup.addEventListener('click', async () => {
+            try {
+                estadoApp.iniciarCarregamento();
+                await gerenciadorConfiguracoes.gerarBackup();
+                estadoApp.adicionarMensagem('sucesso', 'Backup gerado com sucesso');
+            } catch (erro) {
+                console.error('Erro ao gerar backup:', erro);
+                estadoApp.adicionarMensagem('erro', erro.message);
+            } finally {
+                estadoApp.finalizarCarregamento();
+            }
+        });
+    }
+
+    // Configura botão de restauração
+    const btnRestaurar = document.getElementById('btnRestaurar');
+    const inputBackup = document.getElementById('arquivoBackup');
+    if (btnRestaurar && inputBackup) {
+        btnRestaurar.addEventListener('click', async () => {
+            if (!inputBackup.files || !inputBackup.files[0]) {
+                estadoApp.adicionarMensagem('erro', 'Selecione um arquivo de backup');
+                return;
+            }
+
+            try {
+                estadoApp.iniciarCarregamento();
+                await gerenciadorConfiguracoes.restaurarBackup(inputBackup.files[0]);
+                estadoApp.adicionarMensagem('sucesso', 'Backup restaurado com sucesso');
+                // Recarrega a página após a restauração
+                setTimeout(() => window.location.reload(), 2000);
+            } catch (erro) {
+                console.error('Erro ao restaurar backup:', erro);
+                estadoApp.adicionarMensagem('erro', erro.message);
+            } finally {
+                estadoApp.finalizarCarregamento();
+            }
+        });
+    }
+}</script> 

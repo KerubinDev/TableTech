@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">Meu Perfil</h1>
+
+        <!-- Informações do Usuário -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex items-center mb-6">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-xl font-semibold text-gray-900" id="nomeUsuario"></h2>
+                    <p class="text-gray-600" id="cargoUsuario"></p>
+                </div>
+            </div>
+
+            <div class="border-t pt-6">
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Email</dt>
+                        <dd class="mt-1 text-sm text-gray-900" id="emailUsuario"></dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Último Acesso</dt>
+                        <dd class="mt-1 text-sm text-gray-900" id="ultimoAcesso"></dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Formulário de Edição -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6">Atualizar Perfil</h2>
+
+            <form id="perfilForm" class="space-y-6">
+                <div>
+                    <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
+                    <input type="text" id="nome" name="nome" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Alterar Senha</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="senha_atual" class="block text-sm font-medium text-gray-700">Senha Atual</label>
+                            <input type="password" id="senha_atual" name="senha_atual"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label for="nova_senha" class="block text-sm font-medium text-gray-700">Nova Senha</label>
+                            <input type="password" id="nova_senha" name="nova_senha"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label for="confirmar_senha" class="block text-sm font-medium text-gray-700">Confirmar Nova Senha</label>
+                            <input type="password" id="confirmar_senha" name="confirmar_senha"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Função para carregar os dados do usuário
+function carregarDadosUsuario() {
+    const usuario = authManager.usuario;
+    if (!usuario) return;
+
+    // Atualiza as informações do cabeçalho
+    document.getElementById('nomeUsuario').textContent = usuario.nome;
+    document.getElementById('cargoUsuario').textContent = usuario.cargo.charAt(0).toUpperCase() + usuario.cargo.slice(1);
+    document.getElementById('emailUsuario').textContent = usuario.email;
+    document.getElementById('ultimoAcesso').textContent = 
+        usuario.ultimo_acesso ? new Date(usuario.ultimo_acesso).toLocaleString() : 'Nunca';
+
+    // Preenche o formulário
+    const form = document.getElementById('perfilForm');
+    if (form) {
+        form.nome.value = usuario.nome;
+        form.email.value = usuario.email;
+    }
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    // Carrega os dados iniciais
+    carregarDadosUsuario();
+
+    // Configura o formulário
+    const form = document.getElementById('perfilForm');
+    if (form) {
+        form.addEventListener('submit', async (evento) => {
+            evento.preventDefault();
+            
+            try {
+                estadoApp.iniciarCarregamento();
+                
+                const dados = {
+                    nome: form.nome.value,
+                    email: form.email.value
+                };
+
+                // Se a senha atual foi fornecida, inclui a alteração de senha
+                if (form.senha_atual.value) {
+                    if (form.nova_senha.value !== form.confirmar_senha.value) {
+                        throw new Error('As senhas não coincidem');
+                    }
+                    
+                    dados.senha_atual = form.senha_atual.value;
+                    dados.nova_senha = form.nova_senha.value;
+                }
+
+                await authManager.atualizarPerfil(dados);
+                estadoApp.adicionarMensagem('sucesso', 'Perfil atualizado com sucesso');
+                
+                // Limpa os campos de senha
+                form.senha_atual.value = '';
+                form.nova_senha.value = '';
+                form.confirmar_senha.value = '';
+                
+            } catch (erro) {
+                console.error('Erro ao atualizar perfil:', erro);
+                estadoApp.adicionarMensagem('erro', erro.message);
+            } finally {
+                estadoApp.finalizarCarregamento();
+            }
+        });
+    }
+});</script> 

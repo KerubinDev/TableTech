@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableTech - Gerenciar Reservas</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Barra de navegação -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo e título -->
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-900">TableTech</h1>
+                    </div>
+                </div>
+
+                <!-- Menu de navegação -->
+                <div class="flex items-center">
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="/templates/dashboard.html" class="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            <i class="fas fa-home mr-1"></i>
+                            Dashboard
+                        </a>
+                        <a href="/templates/mesas.html" class="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            <i class="fas fa-table mr-1"></i>
+                            Mesas
+                        </a>
+                        <a href="/templates/clientes.html" class="text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            <i class="fas fa-users mr-1"></i>
+                            Clientes
+                        </a>
+                        <a href="/templates/reservas.html" class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            <i class="fas fa-calendar-alt mr-1"></i>
+                            Reservas
+                        </a>
+                    </div>
+
+                    <!-- Menu do usuário -->
+                    <div class="ml-6 relative">
+                        <div class="relative">
+                            <button id="userMenuButton" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <span class="sr-only">Abrir menu do usuário</span>
+                                <i class="fas fa-user-circle text-2xl text-gray-700"></i>
+                            </button>
+                        </div>
+
+                        <!-- Dropdown menu -->
+                        <div id="userMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <a href="/templates/perfil.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i>
+                                Perfil
+                            </a>
+                            <a href="/templates/configuracoes.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-cog mr-2"></i>
+                                Configurações
+                            </a>
+                            <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                Sair
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Cabeçalho -->
+        <div class="md:flex md:items-center md:justify-between mb-6">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Gerenciar Reservas
+                </h2>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4">
+                <button id="novaReservaBtn" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i class="fas fa-plus mr-2"></i>
+                    Nova Reserva
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="bg-white shadow rounded-lg p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label for="dataFiltro" class="block text-sm font-medium text-gray-700">Data</label>
+                    <input type="date" id="dataFiltro"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="statusFiltro" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select id="statusFiltro"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Todos</option>
+                        <option value="pendente">Pendente</option>
+                        <option value="confirmada">Confirmada</option>
+                        <option value="cancelada">Cancelada</option>
+                        <option value="concluida">Concluída</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="mesaFiltro" class="block text-sm font-medium text-gray-700">Mesa</label>
+                    <select id="mesaFiltro"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="">Todas</option>
+                        <!-- As mesas serão carregadas dinamicamente -->
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button id="aplicarFiltrosBtn"
+                        class="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        <i class="fas fa-filter mr-2"></i>
+                        Aplicar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de reservas -->
+        <div class="bg-white shadow overflow-hidden sm:rounded-md">
+            <ul id="listaReservas" class="divide-y divide-gray-200">
+                <!-- As reservas serão renderizadas aqui -->
+            </ul>
+        </div>
+
+        <!-- Modal de reserva -->
+        <div id="reservaModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" id="modalTitulo">
+                        Nova Reserva
+                    </h3>
+                    <form id="reservaForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Seleção de cliente -->
+                            <div>
+                                <label for="clienteSelect" class="block text-sm font-medium text-gray-700">
+                                    Cliente
+                                </label>
+                                <div class="mt-1 relative">
+                                    <input type="text" id="clienteBusca" placeholder="Buscar cliente por CPF ou nome"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <select id="clienteSelect" class="hidden mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <!-- Os clientes serão carregados dinamicamente -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Seleção de mesa -->
+                            <div>
+                                <label for="mesaSelect" class="block text-sm font-medium text-gray-700">
+                                    Mesa
+                                </label>
+                                <select id="mesaSelect" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <!-- As mesas serão carregadas dinamicamente -->
+                                </select>
+                            </div>
+
+                            <!-- Data e hora -->
+                            <div>
+                                <label for="dataReserva" class="block text-sm font-medium text-gray-700">
+                                    Data
+                                </label>
+                                <input type="date" id="dataReserva" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="horaReserva" class="block text-sm font-medium text-gray-700">
+                                    Hora
+                                </label>
+                                <input type="time" id="horaReserva" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+
+                            <!-- Número de pessoas e status -->
+                            <div>
+                                <label for="numeroPessoas" class="block text-sm font-medium text-gray-700">
+                                    Número de Pessoas
+                                </label>
+                                <input type="number" id="numeroPessoas" required min="1"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="statusReserva" class="block text-sm font-medium text-gray-700">
+                                    Status
+                                </label>
+                                <select id="statusReserva" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="pendente">Pendente</option>
+                                    <option value="confirmada">Confirmada</option>
+                                    <option value="cancelada">Cancelada</option>
+                                    <option value="concluida">Concluída</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Observações -->
+                        <div>
+                            <label for="observacoesReserva" class="block text-sm font-medium text-gray-700">
+                                Observações
+                            </label>
+                            <textarea id="observacoesReserva" rows="3"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="salvarReservaBtn"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Salvar
+                    </button>
+                    <button type="button" id="cancelarReservaBtn"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="/static/js/api.js"></script>
+    <script type="module" src="/static/js/estado.js"></script>
+    <script type="module">
+        import api from '/static/js/api.js';
+        import estadoApp from '/static/js/estado.js';
+
+        // Verifica autenticação
+        async function verificarAuth() {
+            if (!await estadoApp.verificarToken()) {
+                window.location.href = '/templates/login.html';
+            }
+        }
+
+        // Toggle menu do usuário
+        document.getElementById('userMenuButton').addEventListener('click', () => {
+            document.getElementById('userMenu').classList.toggle('hidden');
+        });
+
+        // Logout
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            api.logout();
+        });
+
+        // Elementos do modal
+        const modal = document.getElementById('reservaModal');
+        const form = document.getElementById('reservaForm');
+        const modalTitulo = document.getElementById('modalTitulo');
+        let reservaAtual = null;
+
+        // Carrega as mesas disponíveis
+        async function carregarMesas() {
+            try {
+                const mesas = await api.obterMesas();
+                const selectMesa = document.getElementById('mesaSelect');
+                const filtroMesa = document.getElementById('mesaFiltro');
+
+                const options = mesas.map(mesa => `
+                    <option value="${mesa.id}">Mesa ${mesa.numero} (${mesa.capacidade} lugares)</option>
+                `).join('');
+
+                selectMesa.innerHTML = '<option value="">Selecione uma mesa</option>' + options;
+                filtroMesa.innerHTML = '<option value="">Todas as mesas</option>' + options;
+
+            } catch (erro) {
+                console.error('Erro ao carregar mesas:', erro);
+                alert(erro.message);
+            }
+        }
+
+        // Busca clientes
+        let timeoutBusca;
+        document.getElementById('clienteBusca').addEventListener('input', (evento) => {
+            clearTimeout(timeoutBusca);
+            const termo = evento.target.value.trim();
+
+            if (termo.length >= 3) {
+                timeoutBusca = setTimeout(async () => {
+                    try {
+                        const clientes = await api.buscarClientes(termo);
+                        const select = document.getElementById('clienteSelect');
+
+                        select.innerHTML = clientes.map(cliente => `
+                            <option value="${cliente.id}">${cliente.nome} (CPF: ${cliente.cpf})</option>
+                        `).join('');
+
+                        select.classList.remove('hidden');
+
+                    } catch (erro) {
+                        console.error('Erro ao buscar clientes:', erro);
+                    }
+                }, 300);
+            }
+        });
+
+        // Abre o modal para nova reserva
+        document.getElementById('novaReservaBtn').addEventListener('click', () => {
+            modalTitulo.textContent = 'Nova Reserva';
+            form.reset();
+            reservaAtual = null;
+            modal.classList.remove('hidden');
+        });
+
+        // Fecha o modal
+        document.getElementById('cancelarReservaBtn').addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Salva a reserva
+        document.getElementById('salvarReservaBtn').addEventListener('click', async () => {
+            try {
+                const dados = {
+                    cliente_id: form.clienteSelect.value,
+                    mesa_id: form.mesaSelect.value,
+                    data: form.dataReserva.value,
+                    hora: form.horaReserva.value,
+                    numero_pessoas: parseInt(form.numeroPessoas.value),
+                    status: form.statusReserva.value,
+                    observacoes: form.observacoesReserva.value || null
+                };
+
+                if (reservaAtual) {
+                    await api.atualizarReserva(reservaAtual.id, dados);
+                } else {
+                    await api.criarReserva(dados);
+                }
+
+                modal.classList.add('hidden');
+                await carregarReservas();
+
+            } catch (erro) {
+                console.error('Erro ao salvar reserva:', erro);
+                alert(erro.message);
+            }
+        });
+
+        // Carrega e renderiza as reservas
+        async function carregarReservas() {
+            try {
+                const filtros = {
+                    data: document.getElementById('dataFiltro').value,
+                    status: document.getElementById('statusFiltro').value,
+                    mesa_id: document.getElementById('mesaFiltro').value
+                };
+
+                const reservas = await api.obterReservas(filtros);
+                const lista = document.getElementById('listaReservas');
+
+                lista.innerHTML = reservas.map(reserva => `
+                    <li class="px-4 py-4 sm:px-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-calendar-check text-3xl text-gray-400"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-lg font-medium text-gray-900">
+                                            ${reserva.cliente.nome}
+                                            <span class="ml-2 text-sm font-normal text-gray-500">
+                                                (CPF: ${reserva.cliente.cpf})
+                                            </span>
+                                        </h3>
+                                        <div class="mt-1 flex items-center text-sm text-gray-500">
+                                            <i class="fas fa-table mr-1"></i>
+                                            <span>Mesa ${reserva.mesa.numero}</span>
+                                            <span class="mx-2">•</span>
+                                            <i class="fas fa-users mr-1"></i>
+                                            <span>${reserva.numero_pessoas} pessoas</span>
+                                            <span class="mx-2">•</span>
+                                            <i class="fas fa-clock mr-1"></i>
+                                            <span>${new Date(reserva.data + 'T' + reserva.hora).toLocaleString()}</span>
+                                        </div>
+                                        <div class="mt-1 flex items-center">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                                ${reserva.status === 'pendente' ? 'bg-yellow-100 text-yellow-800' :
+                                                reserva.status === 'confirmada' ? 'bg-green-100 text-green-800' :
+                                                reserva.status === 'cancelada' ? 'bg-red-100 text-red-800' :
+                                                'bg-gray-100 text-gray-800'}">
+                                                ${reserva.status.charAt(0).toUpperCase() + reserva.status.slice(1)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="editarReserva(${JSON.stringify(reserva).replace(/"/g, '&quot;')})"
+                                    class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <i class="fas fa-edit mr-1"></i>
+                                    Editar
+                                </button>
+                                <button onclick="excluirReserva(${reserva.id})"
+                                    class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    <i class="fas fa-trash-alt mr-1"></i>
+                                    Excluir
+                                </button>
+                            </div>
+                        </div>
+                        ${reserva.observacoes ? `
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    <i class="fas fa-sticky-note mr-1"></i>
+                                    ${reserva.observacoes}
+                                </p>
+                            </div>
+                        ` : ''}
+                    </li>
+                `).join('');
+
+            } catch (erro) {
+                console.error('Erro ao carregar reservas:', erro);
+                alert(erro.message);
+            }
+        }
+
+        // Edita uma reserva
+        window.editarReserva = (reserva) => {
+            modalTitulo.textContent = 'Editar Reserva';
+            
+            // Preenche o formulário com os dados da reserva
+            const clienteSelect = document.getElementById('clienteSelect');
+            clienteSelect.innerHTML = `<option value="${reserva.cliente.id}">${reserva.cliente.nome} (CPF: ${reserva.cliente.cpf})</option>`;
+            clienteSelect.classList.remove('hidden');
+            
+            document.getElementById('clienteBusca').value = reserva.cliente.nome;
+            document.getElementById('mesaSelect').value = reserva.mesa.id;
+            document.getElementById('dataReserva').value = reserva.data;
+            document.getElementById('horaReserva').value = reserva.hora;
+            document.getElementById('numeroPessoas').value = reserva.numero_pessoas;
+            document.getElementById('statusReserva').value = reserva.status;
+            document.getElementById('observacoesReserva').value = reserva.observacoes || '';
+
+            reservaAtual = reserva;
+            modal.classList.remove('hidden');
+        };
+
+        // Exclui uma reserva
+        window.excluirReserva = async (id) => {
+            if (confirm('Tem certeza que deseja excluir esta reserva?')) {
+                try {
+                    await api.deletarReserva(id);
+                    await carregarReservas();
+                } catch (erro) {
+                    console.error('Erro ao excluir reserva:', erro);
+                    alert(erro.message);
+                }
+            }
+        };
+
+        // Aplica filtros
+        document.getElementById('aplicarFiltrosBtn').addEventListener('click', () => {
+            carregarReservas();
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async () => {
+            await verificarAuth();
+            await carregarMesas();
+            await carregarReservas();
+
+            // Define a data de hoje como padrão no filtro
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataFiltro').value = hoje;
+        });
+    </script>
+</body>
+</html> 

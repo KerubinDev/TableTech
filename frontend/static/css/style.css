@@ -1,0 +1,108 @@
+/* Botões do Menu */
+.menu-btn {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors;
+}
+
+/* Botões de Ação */
+.action-btn {
+    @apply px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors;
+}
+
+/* Cards */
+.card {
+    @apply bg-white rounded-lg shadow-md p-4;
+}
+
+/* Status de Mesa */
+.status-disponivel {
+    @apply text-green-600 bg-green-100 px-2 py-1 rounded-full text-sm;
+}
+
+.status-ocupada {
+    @apply text-red-600 bg-red-100 px-2 py-1 rounded-full text-sm;
+}
+
+.status-reservada {
+    @apply text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full text-sm;
+}
+
+.status-manutencao {
+    @apply text-gray-600 bg-gray-100 px-2 py-1 rounded-full text-sm;
+}
+
+/* Formulários */
+.form-input {
+    @apply w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500;
+}
+
+.form-label {
+    @apply block text-gray-700 mb-2;
+}
+
+.form-group {
+    @apply mb-4;
+}
+
+/* Tabelas */
+.table {
+    @apply w-full border-collapse;
+}
+
+.table th {
+    @apply px-4 py-2 bg-gray-100 border text-left;
+}
+
+.table td {
+    @apply px-4 py-2 border;
+}
+
+/* Alertas */
+.alert {
+    @apply p-4 mb-4 rounded-lg;
+}
+
+.alert-success {
+    @apply bg-green-100 text-green-700;
+}
+
+.alert-error {
+    @apply bg-red-100 text-red-700;
+}
+
+.alert-warning {
+    @apply bg-yellow-100 text-yellow-700;
+}
+
+/* Animações */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Loading Spinner */
+.spinner {
+    @apply w-6 h-6 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin;
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+    .container {
+        @apply px-4;
+    }
+    
+    .menu-btn {
+        @apply text-sm px-3 py-1;
+    }
+    
+    .action-btn {
+        @apply text-sm px-3 py-1;
+    }
+} 

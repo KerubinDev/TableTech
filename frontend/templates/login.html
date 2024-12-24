@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableTech - Login</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Logo e título -->
+            <div>
+                <h1 class="text-center text-3xl font-extrabold text-gray-900">
+                    TableTech
+                </h1>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    Faça login em sua conta
+                </h2>
+            </div>
+
+            <!-- Formulário de login -->
+            <form id="loginForm" class="mt-8 space-y-6">
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div>
+                        <label for="email" class="sr-only">Email</label>
+                        <input id="email" name="email" type="email" required
+                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                            placeholder="Email">
+                    </div>
+                    <div>
+                        <label for="senha" class="sr-only">Senha</label>
+                        <input id="senha" name="senha" type="password" required
+                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                            placeholder="Senha">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-lock text-blue-500 group-hover:text-blue-400"></i>
+                        </span>
+                        Entrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module">
+        // Importa os módulos
+        import api from '/static/js/api.js';
+        import estadoApp from '/static/js/estado.js';
+
+        console.log('Estado carregado:', estadoApp);
+
+        // Função para mostrar/ocultar loading
+        function atualizarLoading(estadoAtual) {
+            console.log('Atualizando loading:', estadoAtual);
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (estadoAtual.carregando) {
+                if (!loadingOverlay) {
+                    const overlay = document.createElement('div');
+                    overlay.id = 'loadingOverlay';
+                    overlay.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50';
+                    overlay.innerHTML = `
+                        <div class="bg-white p-4 rounded-lg shadow-lg flex items-center">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
+                            <span class="text-gray-700">Carregando...</span>
+                        </div>
+                    `;
+                    document.body.appendChild(overlay);
+                }
+            } else if (loadingOverlay) {
+                loadingOverlay.remove();
+            }
+        }
+
+        // Função para mostrar/ocultar mensagens de erro
+        function atualizarErro(estadoAtual) {
+            console.log('Atualizando erro:', estadoAtual);
+            const errorContainer = document.getElementById('errorContainer');
+            if (estadoAtual.erro) {
+                if (!errorContainer) {
+                    const container = document.createElement('div');
+                    container.id = 'errorContainer';
+                    container.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+                    container.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            <span>${estadoAtual.erro}</span>
+                            <button class="ml-4 text-red-700 hover:text-red-900" onclick="this.parentElement.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    document.body.appendChild(container);
+
+                    // Remove a mensagem após 5 segundos
+                    setTimeout(() => {
+                        if (container && container.parentElement) {
+                            container.remove();
+                        }
+                    }, 5000);
+                } else {
+                    errorContainer.querySelector('span').textContent = estadoAtual.erro;
+                }
+            } else if (errorContainer) {
+                errorContainer.remove();
+            }
+        }
+
+        // Verifica se já está autenticado
+        async function verificarAutenticacao() {
+            try {
+                console.log('Verificando autenticação...');
+                const autenticado = await estadoApp.verificarToken();
+                if (autenticado) {
+                    console.log('Usuário autenticado, redirecionando...');
+                    estadoApp.irParaDashboard();
+                    return;
+                }
+            } catch (erro) {
+                console.error('Erro ao verificar autenticação:', erro);
+                estadoApp.definirErro('Erro ao verificar autenticação');
+            }
+        }
+
+        // Configura o formulário de login
+        function configurarFormulario() {
+            const form = document.getElementById('loginForm');
+            form.addEventListener('submit', async (evento) => {
+                evento.preventDefault();
+                console.log('Tentando fazer login...');
+
+                try {
+                    estadoApp.carregando = true;
+                    estadoApp.limparErro();
+
+                    await api.login(
+                        form.email.value,
+                        form.senha.value
+                    );
+
+                } catch (erro) {
+                    console.error('Erro no login:', erro);
+                    estadoApp.definirErro(erro.message || 'Erro ao fazer login');
+                } finally {
+                    estadoApp.carregando = false;
+                }
+            });
+        }
+
+        // Inicializa a página
+        function inicializar() {
+            console.log('Inicializando página de login...');
+            
+            // Adiciona observadores para atualizar a interface
+            estadoApp.adicionarObservador((estadoAtual) => {
+                console.log('Estado atualizado:', estadoAtual);
+                atualizarLoading(estadoAtual);
+                atualizarErro(estadoAtual);
+            });
+
+            // Configura o formulário
+            configurarFormulario();
+
+            // Verifica autenticação
+            verificarAutenticacao();
+        }
+
+        // Inicia quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', inicializar);
+    </script>
+</body>
+</html> 
